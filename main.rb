@@ -15,7 +15,7 @@ header = {'Content-Type': 'application/json'}
 http = Net::HTTP.new(uri.host, uri.port)
 request = Net::HTTP::Post.new(uri.request_uri, header)
 
-CSV.foreach(HPI_DATA_FILE, headers: true) do |row|
+def post_data(row, http, request)
   hpi = {
     date: row[DATE_COLUMN],
     region_name: row[REGION_NAME_COLUMN],
@@ -24,6 +24,10 @@ CSV.foreach(HPI_DATA_FILE, headers: true) do |row|
 
   request.body = hpi.to_json
   p response = http.request(request)
+end
+
+CSV.foreach(HPI_DATA_FILE, headers: true) do |row|
+  post_data(row, http, request)
 end
 
 p 'Done!'
